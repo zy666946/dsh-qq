@@ -132,7 +132,10 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 
 ## HTTP 接口
 
-监听 `127.0.0.1:thinkPort`（默认 3002）：
+同一套路由挂两个地方：
+
+**① dsh 的 webServer**（`/api/qq/*`，浏览器设置页用）
+**② 独立端口** `127.0.0.1:thinkPort`（默认 3002，给心跳 `/think` 和本机调试用）
 
 | 方法 | 路径 | 作用 |
 |---|---|---|
@@ -141,7 +144,11 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 | POST | `/api/qq/test` | 发测试消息 |
 | POST | `/api/qq/reconnect` | 断开重连 |
 | POST | `/api/qq/think` | 用 QQ 的会话问一句话 |
-| POST | `/think` | 给 dsh-heartbeat 用的思考接口 |
+| POST | `/think` | 给 dsh-heartbeat 用的思考接口（仅独立端口） |
+
+> 为什么要挂两份：浏览器里的设置页只能访问 dsh 自己的 webServer（同源），
+> 而心跳插件需要一个固定的本机 HTTP 地址。所以 webServer 那份给页面，
+> 独立端口那份给进程间调用。
 
 ## 自启动
 
@@ -164,6 +171,24 @@ sudo systemctl enable --now napcat
 | 收到消息但不回 | 你的号不在白名单；或 profile `qq` 没初始化（会卡在子进程启动） |
 | 一直「正在想…」 | SDK 子进程的 profile 被别的实例占用 —— 换个 profile |
 | 日志 `duplicate` | 插件被装载两次（HMR），已做幂等保护，可忽略 |
+| 设置页报 `HTTP 404` | 插件没挂到 webServer（旧版本问题，0.1.1 已修）|
+| 启动日志 `EADDRINUSE` | 3002 被占用：停掉旧的桥接/进程，或把 `thinkPort` 换一个 |
+| 配置改了没生效 | 检查 `$DSH_HOME/qq/config.json` 里有没有残留的旧值（优先级最高）|
+
+## 从独立 bridge 脚本迁移
+
+如果你之前用的是一个单独的 Node 桥接脚本 + systemd 服务：
+
+```bash
+# 1. 先停旧的（重要：它会占着 OneBot 和 /think 端口）
+sudo systemctl disable --now qq-bridge
+# 2. 确认端口释放
+ss -lnt | grep -E ':3001|:3002'
+# 3. 再重启 dsh，让插件接管
+sudo systemctl restart dsh
+```
+
+顺序反了会撞端口（老进程还没退出，新进程 `listen` 失败）。
 
 ## 已知限制
 
