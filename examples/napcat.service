@@ -1,0 +1,26 @@
+[Unit]
+Description=NapCat QQ sidecar (OneBot v11)
+Documentation=https://napneko.github.io
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+# 改成你实际安装 NapCat 的目录（launcher.sh 所在处）
+WorkingDirectory=/root/napcat
+Environment=HOME=/root
+# -q 后面换成机器人的 QQ 号
+ExecStart=/bin/bash /root/napcat/launcher.sh -q 123456789
+Restart=always
+RestartSec=20
+# QQ 客户端大概 400~700M，超出就让它自己 OOM 重启，别拖垮整机
+MemoryHigh=1400M
+MemoryMax=1800M
+StandardOutput=append:/var/log/napcat.log
+StandardError=append:/var/log/napcat.log
+KillMode=mixed
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
