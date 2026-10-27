@@ -145,6 +145,33 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 | POST | `/api/qq/reconnect` | 断开重连 |
 | POST | `/api/qq/think` | 用 QQ 的会话问一句话 |
 | POST | `/think` | 给 dsh-heartbeat 用的思考接口（仅独立端口） |
+| GET/POST | `/api/qq/qzone` | **发 QQ 空间说说**（默认仅自己可见）|
+
+### 发说说
+
+```bash
+# 默认私密（仅自己可见）
+curl -X POST http://127.0.0.1:3002/api/qq/qzone \
+  -H 'content-type: application/json' \
+  -d '{"content":"今天天气不错"}'
+
+# 指定可见范围
+curl -X POST http://127.0.0.1:3002/api/qq/qzone \
+  -H 'content-type: application/json' \
+  -d '{"content":"...","ugcRight":4}'          # 好友可见
+# ugcRight: 1 所有人 / 4 好友 / 16 指定好友（配 targetUins）/ 64 仅自己（默认）/ 128 指定好友不可见
+```
+
+在 QQ 里直接跟它说「发条说说：xxx」也行 —— 它会自己调这个接口；
+说「发好友可见」就会自动换分组。
+
+### 权限
+
+QQ 会话默认跑在 **完全权限**（`danger-full-access` + 审批 `never`）：
+它能执行命令、读写文件、调用本机接口，不会在半路卡住等你点确认。
+
+这是 `DSH_PERMISSION_MODE=danger-full-access` 环境变量控制的，由插件在拉起
+SDK 子进程时注入。想收紧就改插件配置里的 `permissionMode`（比如 `workspace-write`）。
 
 > 为什么要挂两份：浏览器里的设置页只能访问 dsh 自己的 webServer（同源），
 > 而心跳插件需要一个固定的本机 HTTP 地址。所以 webServer 那份给页面，
