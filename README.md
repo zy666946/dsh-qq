@@ -201,6 +201,8 @@ sudo systemctl enable --now napcat
 | 设置页报 `HTTP 404` | 插件没挂到 webServer（旧版本问题，0.1.1 已修）|
 | 启动日志 `EADDRINUSE` | 3002 被占用：停掉旧的桥接/进程，或把 `thinkPort` 换一个 |
 | 配置改了没生效 | 检查 `$DSH_HOME/qq/config.json` 里有没有残留的旧值（优先级最高）|
+| 发说说报 `getClientKey Error` | **QQ 登录态过期**，重启 NapCat 重新扫码即可（不是插件问题）|
+| 扫码总失效 | 二维码只有 2 分钟；或手机 QQ 版本太老 |
 
 ## 从独立 bridge 脚本迁移
 
