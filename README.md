@@ -96,7 +96,11 @@ dsh plugin --profile qq add @furongjun1999/dsh-memory      # 灵枢：跨会话�
 
 **人格不用装插件**：`$DSH_HOME/AGENTS.md` 会被 `@deepseek-ai/dsh-agent-instructions` 每轮自动读进来，写在那里对网页和 QQ 都生效。
 
-dsh-qq 启动时会在日志里提示 qq profile 缺哪些可选插件，但**不会替你装**——装包应该由你点头。
+dsh-qq 启动时会在日志里提示 qq profile 缺哪些可选插件。
+
+想让它在启动时**自动装**，在设置页「能力与权限」里打开「自动给 QQ 会话装可选插件」（配置项 `autoInstallChildPlugins`，默认关）。打开后启动时会检查子进程 profile，缺就执行 `dsh plugin --profile <profile> add <包名>`，装完自动重建子进程；装了什么、成没成，会记录在 `GET /api/qq/state` 的 `runtime.autoInstall` 里。
+
+默认关是有意的：**在别人机器上装 npm 包应该先得到同意**。
 
 ### 2. 挂进 web profile
 
