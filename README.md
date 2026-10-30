@@ -131,7 +131,7 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 
 保存写入 `$DSH_HOME/qq/config.json`，优先级高于 profile 配置，重启后保留。
 
-分条默认 `splitShortMax=100` / `splitSoftMax=160`（可在 `config.json` 里改）；按句子边界拆，单句不硬切，最后不足 40 字的尾巴并回上一条；`maxChunk` 仍是单条硬上限，默认 3000。
+分条默认 `splitShortMax=100` / `splitSoftMax=160`（可在 `config.json` 里改）；按目标条数配平，避免第一条塞满、最后只剩一句；单句不硬切，最后不足 40 字的尾巴并回上一条；`maxChunk` 仍是单条硬上限，默认 3000。
 
 ## HTTP 接口
 
