@@ -166,6 +166,12 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 `assistant/message.usage`，窗口大小优先取 `request/context.contextWindow`；没拿到时用
 `config.contextWindow`（默认 1,000,000，可在 `config.json` 里改）。
 
+### 想你了联动
+
+每次回复成功后，dsh-qq 会写 `<DSH_HOME>/heartbeat/last-turn.json`，内容是这一轮的
+`userAt / userText / replyAt / replyText`。装 `dsh-heartbeat-inner` 0.3.0 后，它会用这轮
+内容算期待时间；没装也不影响 QQ 回复。
+
 ## HTTP 接口
 
 同一套路由挂两个地方：
