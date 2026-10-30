@@ -74,7 +74,29 @@ QQ 聊天需要一个**常驻 SDK 子进程**，而同一个 profile 不能被�
 dsh --profile qq --from-default-profile sdk --dump-config
 ```
 
-想让它也带上人格，可以在 `$DSH_HOME/profiles/qq/package.json` 的 `bundles` 里加你的 persona 插件。
+### 1.5 让 QQ 那边也用上插件（可选）
+
+QQ 里的助手跑在**独立进程** `dsh --profile qq` 里，它只认自己 profile 的 `bundles`——网页 profile 装了什么，它看不见。所以插件要单独装一份：
+
+```bash
+dsh plugin --profile qq add @furongjun1999/dsh-memory      # 灵枢：跨会话记忆
+```
+
+装完不用重启 dsh：插件会在下一次拉起子进程时带上（已有子进程时，在设置页点一下「重建」或改任意配置项）。
+
+能装进 qq profile 的插件要看它要哪些服务（`export const inject`）：
+
+| 插件 | 需要 | qq profile 能装吗 |
+|---|---|---|
+| `@furongjun1999/dsh-memory` | `tools` | ✅ |
+| `dsh-agent-md` | `systemPrompt`, `webServer` | ❌ 没有 webServer |
+| `billion-context` | `tools`, `commands`, `agents` | ❌ 没有 commands/agents |
+| `dshmarket` | 网页 UI | ❌ 对后台进程无意义 |
+| `dsh-heartbeat-inner` | — | ❌ 归主进程管，别重复装 |
+
+**人格不用装插件**：`$DSH_HOME/AGENTS.md` 会被 `@deepseek-ai/dsh-agent-instructions` 每轮自动读进来，写在那里对网页和 QQ 都生效。
+
+dsh-qq 启动时会在日志里提示 qq profile 缺哪些可选插件，但**不会替你装**——装包应该由你点头。
 
 ### 2. 挂进 web profile
 
