@@ -169,8 +169,8 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 ### 想你了联动
 
 每次回复成功后，dsh-qq 会写 `<DSH_HOME>/heartbeat/last-turn.json`，内容是这一轮的
-`userAt / userText / replyAt / replyText`。装 `dsh-heartbeat-inner` 0.3.0 后，它会用这轮
-内容算期待时间；没装也不影响 QQ 回复。
+`userAt / userText / replyAt / replyText`，并附上最近 5 轮的 `recentTurns`。装
+`dsh-heartbeat-inner` 0.3.0 后，它会用这些内容算期待时间、判断要不要主动；没装也不影响 QQ 回复。
 
 ### 长轮次与「继续」
 
