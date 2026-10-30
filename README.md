@@ -166,6 +166,12 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 `assistant/message.usage`，窗口大小优先取 `request/context.contextWindow`；没拿到时用
 `config.contextWindow`（默认 1,000,000，可在 `config.json` 里改）。
 
+### 图片消息
+
+QQ 里发来的图片会先下载到 `<DSH_HOME>/qq/images/`，然后在交给模型的 prompt 里附上本地路径，
+提示它用 `read_image` 查看。NapCat 给的 `url` / `file` / `base64://` / `data:image/` 都支持；
+单张上限 20 MB。下载失败不影响文字回复。
+
 ### 想你了联动
 
 每次回复成功后，dsh-qq 会写 `<DSH_HOME>/heartbeat/last-turn.json`，内容是这一轮的
