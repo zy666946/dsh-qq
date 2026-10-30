@@ -1,6 +1,6 @@
 {
   "name": "dsh-qq",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "type": "module",
   "description": "把 QQ 接进 DeepSeek Harness：OneBot v11 接入、白名单、群聊 @、自动回复，带设置页。",
