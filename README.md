@@ -122,6 +122,7 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 | 区块 | 内容 |
 |---|---|
 | 状态 | 是否连上、登录昵称/QQ、运行时长、收到/回复/拒绝计数、最后一条消息 |
+| **上下文用量** | **最近一次请求的 token 用量 / 上下文窗口 / 百分比**，以及输入、输出、缓存读取明细 |
 | 连接 | OneBot 地址、机器人 QQ 号、启用开关 |
 | 谁能说话 | 私聊白名单、群白名单、群内 @ 开关、陌生人礼貌拒绝 |
 | **能力与权限** | **发说说开关**、**QQ 会话权限**（完全权限 / 工作区可写 / 只读）|
@@ -132,6 +133,12 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 保存写入 `$DSH_HOME/qq/config.json`，优先级高于 profile 配置，重启后保留。
 
 分条默认 `splitShortMax=100` / `splitSoftMax=160`（可在 `config.json` 里改）；按目标条数配平，避免第一条塞满、最后只剩一句；单句不硬切，最后不足 40 字的尾巴并回上一条；`maxChunk` 仍是单条硬上限，默认 3000。
+
+### 上下文用量
+
+设置页顶部会显示「已用 / 上限 token」「百分比」和输入/输出/缓存明细。数据来自 SDK 的
+`assistant/message.usage`，窗口大小优先取 `request/context.contextWindow`；没拿到时用
+`config.contextWindow`（默认 1,000,000，可在 `config.json` 里改）。
 
 ## HTTP 接口
 
