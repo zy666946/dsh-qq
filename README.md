@@ -172,6 +172,13 @@ ln -sfn "$DSH_HOME/plugins/dsh-qq" node_modules/dsh-qq
 `userAt / userText / replyAt / replyText`。装 `dsh-heartbeat-inner` 0.3.0 后，它会用这轮
 内容算期待时间；没装也不影响 QQ 回复。
 
+### 长轮次与「继续」
+
+`turnTimeoutMs` 默认 1 小时。超过 1 小时还没想完，dsh-qq 会先发一句
+「这轮想得有点久，我先不丢。你回『继续』，我接着。」但**不会丢掉这一轮**：
+它继续等 SDK 的 `idle`，真正答案出来还会发。此时主人回「继续」，dsh-qq 只回
+「嗯，还在想，没丢。」，不会另起一轮把原来那轮顶掉。
+
 ## HTTP 接口
 
 同一套路由挂两个地方：
